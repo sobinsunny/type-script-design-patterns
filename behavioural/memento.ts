@@ -56,7 +56,6 @@ class FileEditor implements IOriginator {
 }
 
 class ClientCareTaker {
-    history: Array<IMemento>
     fileEditor = new FileEditor();
 
     constructor() {
