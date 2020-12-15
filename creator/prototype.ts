@@ -1,41 +1,73 @@
-// clonable interface, concrete class, registry class
+/**
+ * Cloning an object, which is costly to create
+ */
 
-interface Clonable {
-    clone()
+interface IClonable {
+	clone();
 }
 
-class PrototypeClass implements Clonable {
-    constructor() {
-        // time consuming instance.
-        for (let i = 0; i < 100000; i++) {}
-    }
-    clone() {
-        return (<any>Object).assign({}, this)
-    }
-    
+class Clonable implements IClonable {
+	clone() {
+		return Object.create(this);
+	}
 }
 
+type TBook = {
+	bid: string;
+	name: string;
+	author: string;
+	publication_year: number;
+};
 
-class Registry {
-    private prototypeInstance: Clonable
-    getInstance(): Clonable {
-        console.time("Getting NEW instance..");
-        this.prototypeInstance = new PrototypeClass();
-        console.timeEnd("Getting NEW instance..");
-        return this.prototypeInstance;
-    }
+class Book extends Clonable {
+	books: Array<TBook> = [];
 
-    getClone(): Clonable {
-        console.time("Getting CLONED instance..");
-        const clonedInstance = this.prototypeInstance.clone();
-        console.timeEnd("Getting CLONED instance..");
-        return clonedInstance
-    }
+	constructor() {
+		super();
+		for (let i = 0; i < 10000; i++) {
+			this.books.push({
+				bid: i + "_BOOKID",
+				name: "BOOK_STR_" + i,
+				author: "Gayle laakmann",
+				publication_year: 1991,
+			});
+		}
+	}
+
+	remove(index) {
+		this.books.splice(index, 1);
+	}
+
+	count() {
+		return this.books.length;
+	}
+
+	toString(): string {
+		return `Book (${JSON.stringify(this.books)})`;
+	}
+
+	clone() {
+		return super.clone();
+	}
 }
 
+class Client {
+	clonedBook: Book;
+	constructor() {
+		console.time("BOOK");
+		const b = new Book();
 
-const registry = new Registry();
+		console.log(b.count());
+		b.remove(100);
+		console.log(b.count());
+		console.timeEnd("BOOK");
 
-registry.getInstance();
-registry.getClone();
+		console.time("CLONE");
+		this.clonedBook = <Book>b.clone();
+		//console.log(this.clonedBook);
+		console.log(this.clonedBook.count());
+		console.timeEnd("CLONE");
+	}
+}
 
+new Client();

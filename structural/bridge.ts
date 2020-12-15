@@ -1,71 +1,89 @@
 /**
- * Bridge is similiar to Adapter. But the key difference is to decouple the implementation  and abstraction.
- * 
- * e.g. Here class Mac has an implementation to set cpu, memory, and hdd. But we dont want the user to set them, we 
- * build an new entity (asbtraction) called apple store, which handles upgrading the spec for you.
+ * Bridge the implementation between two interface without knowing its concerte classes
+ *
+ * Here the vehile interface and workshop interface communicates without knowing concrete classes.
  */
 
-interface ComputerSpec {
-    setCPU(cpu: string): void;
-    setMemory(memory: string): void;
-    setHDD(hdd: string): void;
+abstract class Vehicle {
+	protected workShop1: Workshop;
+	protected workShop2: Workshop;
+
+	constructor(workShop1: Workshop, workShop2: Workshop) {
+		this.workShop1 = workShop1;
+		this.workShop2 = workShop2;
+	}
+
+	public abstract manufacture(): void;
 }
 
-class Mac implements ComputerSpec {
-    private cpu: string;
-    private memory: string;
-    private hdd: string;
+// Refine abstraction 1 in bridge pattern
+class Car extends Vehicle {
+	workShop1: Workshop;
+	workShop2: Workshop;
 
-    constructor(memory: string, cpu: string, hdd: string) {
-        this.memory = memory;
-        this.cpu = cpu;
-        this.hdd = hdd;
-    }
+	constructor(workShop1: Workshop, workShop2: Workshop) {
+		super(workShop1, workShop2);
 
-    setCPU(cpu: string): void {
-        this.cpu = cpu;
-    }
-    setMemory(memory: string): void {
-        this.memory = memory;
-    }
-    setHDD(hdd: string): void {
-        this.hdd = hdd;
-    }
+		this.workShop1 = workShop1;
+		this.workShop2 = workShop2;
+	}
+
+	public manufacture(): void {
+		console.log("Car ");
+		this.workShop1.work();
+		this.workShop2.work();
+	}
 }
 
-class AbstractAppleStore {
-    private computer: ComputerSpec;
+// Refine abstraction 2 in bridge pattern
+class Bike extends Vehicle {
+	workShop1: Workshop;
+	workShop2: Workshop;
 
-    register(computer: ComputerSpec) {
-        this.computer = computer;
-    }
+	constructor(workShop1: Workshop, workShop2: Workshop) {
+		super(workShop1, workShop2);
 
-    upgradeMemory(ram: string) {
-        this.computer.setMemory(ram);
-    }
+		this.workShop1 = workShop1;
+		this.workShop2 = workShop2;
+	}
 
-    upgradeHDD(hdd: string) {
-        this.computer.setHDD(hdd);
-    }
-
-    upgradeCPU(cpu: string) {
-        this.computer.setCPU(cpu);
-    }
-
-    getComputer(): ComputerSpec {
-        console.log(this.computer);
-        return this.computer;
-    }
+	public manufacture(): void {
+		console.log("BIKE ");
+		this.workShop1.work();
+		this.workShop2.work();
+	}
 }
 
-const mac = new Mac("2 GB", "1.4 GHZ", "80 GB");
+// Implementor for bridge pattern
+interface Workshop {
+	work(): void;
+}
 
-const appleStoreAbstraction = new AbstractAppleStore();
+// Concrete implementation 1 for bridge pattern
+class Produce implements Workshop {
+	public work(): void {
+		console.log("Produced");
+	}
+}
 
-appleStoreAbstraction.register(mac);
+// Concrete implementation 2 for bridge pattern
+class Assemble implements Workshop {
+	public work(): void {
+		console.log(" And");
+		console.log(" Assembled.");
+	}
+}
 
-appleStoreAbstraction.getComputer();
-appleStoreAbstraction.upgradeCPU("2.4 GHz");
-appleStoreAbstraction.upgradeHDD("500 GB");
-appleStoreAbstraction.upgradeMemory("8 GB");
-appleStoreAbstraction.getComputer();
+// Demonstration of bridge design pattern
+class BridgePattern {
+	vehicle1: Vehicle;
+	vehicle2: Vehicle;
+	constructor() {
+		this.vehicle1 = new Car(new Produce(), new Assemble());
+		this.vehicle1.manufacture();
+		this.vehicle2 = new Bike(new Produce(), new Assemble());
+		this.vehicle2.manufacture();
+	}
+}
+
+new BridgePattern();

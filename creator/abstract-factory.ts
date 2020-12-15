@@ -1,130 +1,114 @@
-// Abstract factory pattern
-
-
 /**
- * Abstract class, which defines, all the methods for the concrete classes.
+ * This is an factory of factories.
  */
-abstract class Computer {
-     
-    public abstract getRAM(): string;
-    public abstract getHDD(): string;
-    public abstract getCPU(): string;
-     
-    public toString(): string {
-        return `"RAM= ${this.getRAM()}, HDD=${this.getHDD()}, CPU=${this.getCPU()}`;
-    }
+abstract class Product {
+	abstract getDetails(): string;
 }
 
-/**
- * concrete class which extends the abstract class
- */
-class PC extends Computer {
-    private ram: string;
-    private hdd: string;
-    private cpu: string;
-
-    constructor(ram, hdd, cpu) {
-        super();
-        this.ram = ram;
-        this.hdd = hdd;
-        this.cpu = cpu;
-    }
-
-    public getRAM(): string {
-        return this.ram;
-    }
-    public getHDD(): string {
-        return this.hdd;
-    }
-    public getCPU(): string {
-        return this.cpu;
-    }
+class Chair extends Product {
+	getDetails(): string {
+		console.log("Chair brand unknown...");
+		return "Chair Brand Unknown";
+	}
 }
 
-/**
- * concrete class which extends the abstract class
- */
-class Server extends Computer {
-    private ram: string;
-    private hdd: string;
-    private cpu: string;
-
-    constructor(ram: string, hdd: string, cpu: string) {
-        super();
-        this.ram = ram;
-        this.hdd = hdd;
-        this.cpu = cpu;
-    }
-
-    public getRAM(): string {
-        return this.ram;
-    }
-    public getHDD(): string {
-        return this.hdd;
-    }
-    public getCPU(): string {
-        return this.cpu;
-    }
+class Table extends Product {
+	getDetails(): string {
+		console.log("table brand unknown...");
+		return "Table Brand Unknown";
+	}
 }
 
-/**
- * Abstract factory interface, which defines the concrete factory classes implementation
- */
-interface AbstractComputerFactory {
-    createComputer(): Computer;
+class Mobile extends Product {
+	getDetails(): string {
+		console.log("mobile brand unknown...");
+		return "Mobile Brand Unknown";
+	}
 }
 
-/**
- * Concrete PC factory class to help defining the methods
- */
-class PCFactory implements AbstractComputerFactory {
-    private ram: string;
-	private hdd: string;
-	private cpu: string;
-	
-	constructor(ram: string, hdd: string, cpu: string){
-		this.ram = ram;
-		this.hdd = hdd;
-		this.cpu = cpu;
-    }
-    
-	public createComputer(): Computer {
-		return new PC(this.ram, this.hdd, this.cpu);
-    }
+class SmartWatch extends Product {
+	getDetails(): string {
+		console.log("smart brand unknown...");
+		return "smart watch Unknown";
+	}
 }
 
-/**
- * Concrete server factory class to help defining the methods
- */
-class ServerFactory implements AbstractComputerFactory {
-    private ram: string;
-	private hdd: string;
-	private cpu: string;
-	
-	constructor(ram: string, hdd: string, cpu: string){
-		this.ram = ram;
-		this.hdd = hdd;
-		this.cpu = cpu;
-    }
-    
-	public createComputer(): Computer {
-		return new Server(this.ram, this.hdd, this.cpu);
-    }
+enum product_categories {
+	FURNITURE,
+	GADGETS,
 }
 
-/**
- * An consumer class, which helps the client application to get the desired output.
- */
-class ComputerFactory {
-    getComputer(factory: AbstractComputerFactory){
-		return factory.createComputer();
-	}    
+enum products {
+	TABLE,
+	CHAIR,
+	MOBILE,
+	SMART_WATCH,
 }
 
-const computerFactory = new ComputerFactory();
+abstract class AbstractFactory {
+	constructor() {}
 
-const pc = computerFactory.getComputer(new PCFactory("2 GB", "500 GB", "2.4 GHz"));
-const server = computerFactory.getComputer(new ServerFactory("20 GB", "10 TB", "6 GHz"));
+	abstract getProduct(type: products): Product;
+}
 
-console.log(pc);
-console.log(server);
+class FurnitureFacrory extends AbstractFactory {
+	getProduct(type: products): Product {
+		console.log("Looking into the furniture factory....");
+		switch (type) {
+			case products.CHAIR:
+				return new Chair();
+			case products.TABLE:
+				return new Table();
+		}
+	}
+}
+
+class GadgetsFactory extends AbstractFactory {
+	getProduct(type: products): Product {
+		console.log("Looking into the Gadgets factory....");
+		switch (type) {
+			case products.MOBILE:
+				return new Mobile();
+			case products.SMART_WATCH:
+				return new SmartWatch();
+		}
+	}
+}
+
+class WareHouse {
+	getFactory(type: product_categories): AbstractFactory {
+		switch (type) {
+			case product_categories.FURNITURE:
+				return new FurnitureFacrory();
+			case product_categories.GADGETS:
+				return new GadgetsFactory();
+		}
+	}
+}
+
+class Client {
+	constructor() {
+		const wareHouse = new WareHouse();
+
+		wareHouse
+			.getFactory(product_categories.FURNITURE)
+			.getProduct(products.CHAIR)
+			.getDetails();
+
+		wareHouse
+			.getFactory(product_categories.FURNITURE)
+			.getProduct(products.TABLE)
+			.getDetails();
+
+		wareHouse
+			.getFactory(product_categories.GADGETS)
+			.getProduct(products.MOBILE)
+			.getDetails();
+		wareHouse
+			.getFactory(product_categories.GADGETS)
+			.getProduct(products.SMART_WATCH)
+			.getDetails();
+	}
+}
+
+const client = new Client();

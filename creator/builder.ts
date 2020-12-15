@@ -1,57 +1,59 @@
-// Builder pattern (Builder, Director, concrete classes)
+/**
+ * Director to build, director build the original product.
+ */
 
-interface Builder {
-    setCPU(cpu: string): void
-    setMemory(memory: string): void
-    setHDD(hdd: string): void
+interface IComputer {
+	ram: string;
+	cpu: string;
+	hdd: string;
+	screen_size: number;
+	battery_size: number;
+
+	setScreenSize(size: number): IComputer;
+	setBatterSize(size: number): IComputer;
 }
 
-class PC implements Builder {
-    private cpu: string
-    private memory: string
-    private hdd: string
-
-    setCPU(cpu: string): void {
-        this.cpu = cpu;
-    }
-    setMemory(memory: string): void {
-        this.memory = memory;
-    }
-    setHDD(hdd: string): void {
-        this.hdd = hdd;
-    }
+interface IComputerBuilder {
+	buildPC(): IComputer;
+	buildServer(): IComputer;
 }
 
-class Director {
-    private builder: Builder
+class PC implements IComputer {
+	ram: string;
+	cpu: string;
+	hdd: string;
+	screen_size: number = 14;
+	battery_size: number = 6000;
 
-    public setBuilder(builder: Builder) {
-        this.builder = builder;
-    }
+	constructor(ram: string, cpu: string, hdd: string) {
+		this.ram = ram;
+		this.cpu = cpu;
+		this.hdd = hdd;
+	}
+	setScreenSize(size: number): IComputer {
+		this.screen_size = size;
+		return this;
+	}
+	setBatterSize(size: number): IComputer {
+		this.battery_size = size;
+		return this;
+	}
+}
 
-    public makePC() {
-        this.builder.setCPU("2.7 GHz");
-        this.builder.setMemory("8 GB");
-        this.builder.setHDD("250 GB");
-    }
-
-    public makeServer() {
-        this.builder.setCPU("6 GHz");
-        this.builder.setMemory("20 GB");
-        this.builder.setHDD("10 TB");
-    }
-
-    public getProduct() {
-        return this.builder;
-    }
+class Director implements IComputerBuilder {
+	buildPC(): IComputer {
+		return new PC("4GB", "Intel i7", "250GB")
+			.setBatterSize(7000)
+			.setScreenSize(14);
+	}
+	buildServer(): IComputer {
+		return new PC("16GB", "Intel i7", "500GB")
+			.setBatterSize(9000)
+			.setScreenSize(16);
+	}
 }
 
 const director = new Director();
 
-director.setBuilder(new PC());
-
-director.makePC();
-console.log(director.getProduct())
-director.makeServer();
-console.log(director.getProduct())
-
+console.log(director.buildPC());
+console.log(director.buildServer());
