@@ -1,77 +1,89 @@
-
 /**
  * memento pattern introduce state maintainance without disturbing other implementation details of the originator, where more business logics
  * might be expected.
- * 
- * e.g. The fileEditor can have various functionality other than state maintance, here the state mainataince is moved to the Mementostore
- * which decouples the file editor business logic from the store.
+ *
+ * Memento has originator, memento, caretaker, where caretaker takes care of restoring the originator state.
+ *
+ * Memento - single object / single memory.
+ * Caretaker - maintans all the list of values.
+ * Originator - Originator originates and save state to memento, and return memento (state), which can be stored to caretaker.
  */
 
 interface IMemento {
-    getSavedState()
+	state: any;
 }
 
-interface IOriginator {
-    saveToMemento(): IMemento
-    restoreFromMemento(memento: IMemento)
+interface IOrignator {
+	data: any;
 }
 
-class MementoStore implements IMemento {
-    states: Array<string> = []
+class Memento implements IMemento {
+	state: any;
 
-    constructor(states) {
-        console.log("saving to memento....", states)
-        states.forEach(state => {
-            this.states.push(state);
-        });
-    }
+	constructor(state) {
+		this.state = state;
+	}
 
-    getSavedState() {
-        return this.states;
-    }
+	getState() {
+		return this.state;
+	}
 }
 
-class FileEditor implements IOriginator {
-    state: Array<string>
-    constructor() {
-        this.state = []
-    }
+class Originator implements IOrignator {
+	data: any;
 
-    add(str: string) {
-        console.log("adding to editor " + str);
-        this.state.push(str);
-    }
+	constructor() {}
 
-    saveToMemento(): IMemento {
-        return new MementoStore(this.state);
-    }
+	saveState() {
+		return new Memento(this.data);
+	}
 
-    getData(): Array<string> {
-        return this.state;
-    }
-    
-    restoreFromMemento(memento: IMemento) {
-        this.state = memento.getSavedState();
-    }
+	setState(data) {
+		this.data = data;
+		return this;
+	}
+
+	getState() {
+		return this.data;
+	}
+
+	getStateFromMemento(memento: Memento) {
+		this.data = memento.getState();
+	}
 }
 
-class ClientCareTaker {
-    fileEditor = new FileEditor();
+class CareTaker {
+	memento: Array<Memento> = [];
 
-    constructor() {
-        this.fileEditor.add("state-1");
-        this.fileEditor.add("state-2");
+	add(memento: Memento) {
+		this.memento.push(memento);
+	}
 
-        const savedState = this.fileEditor.saveToMemento();
-
-        this.fileEditor.add("state-3");
-        this.fileEditor.add("state-4");
-
-        this.fileEditor.restoreFromMemento(savedState);
-
-        console.log("Doing undo......");
-        console.log(this.fileEditor.getData());
-    }
+	get(index: number): Memento {
+		return this.memento[index];
+	}
 }
 
-new ClientCareTaker();
+class Client {
+	constructor() {
+		const originator = new Originator();
+		const careTaker = new CareTaker();
+
+		originator.setState("State #1");
+		originator.setState("State #2");
+		careTaker.add(originator.saveState());
+
+		originator.setState("State #3");
+		careTaker.add(originator.saveState());
+
+		originator.setState("State #4");
+		console.log("Current State: " + originator.getState());
+
+		originator.getStateFromMemento(careTaker.get(0));
+		console.log("First saved State: " + originator.getState());
+		originator.getStateFromMemento(careTaker.get(1));
+		console.log("Second saved State: " + originator.getState());
+	}
+}
+
+new Client();

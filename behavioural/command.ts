@@ -1,76 +1,79 @@
 /**
- * Command pattern seperate the request logic from reciever, and makes the request object to extend from the reciever
- * state can be maintained in reciever, and also the global state can be maintained in invoker, command is various 
- * functions to change the state
- * 
- * e.g. Here the light and ac are reciever, think of an IOT based light and ac, where there can be different controls/commands possible
- * and should support extending these functionalities, the mobile app here can be treated as an invoker, just executes the command, and maintain
- * some caches, and acts as a proxy.
+ * SignalReciever - Reciever interface
+ * Command - command interface for the actual command.
+ *
+ * TurnOn, TurnOff - concrete command classes.
+ * Invoker - Broker/invoker, who does the given command interface execution
+ *
+ * Light, AC are the actual reciever/requestor concrete classes.
+ *
+ * Command interface and reciever interface talk to each other via broker, where, command can be extended
+ * to support more operations, which can modify the state of the reciever.
  */
 
 interface SignalReciever {
-    toggle(): void
+	toggle(): void;
 }
 
 interface Command {
-    execute(): void
+	execute(): void;
 }
 
 class Light implements SignalReciever {
-    lightState = false
-    toggle(): void {
-        if (!this.lightState) {
-            this.lightState = true;
-            console.log("Turning on light, its now ON");
-        } else {
-            this.lightState = false;
-            console.log("Turning off light, its now OFF");
-        }
-    }
+	lightState = false;
+	toggle(): void {
+		if (!this.lightState) {
+			this.lightState = true;
+			console.log("Turning on light, its now ON");
+		} else {
+			this.lightState = false;
+			console.log("Turning off light, its now OFF");
+		}
+	}
 }
 
 class AC implements SignalReciever {
-    acState = false
-    toggle(): void {
-        if (!this.acState) {
-            this.acState = true;
-            console.log("Turning on AC, its now ON");
-        } else {
-            this.acState = false;
-            console.log("Turning off AC, its now OFF");
-        }
-    }
+	acState = false;
+	toggle(): void {
+		if (!this.acState) {
+			this.acState = true;
+			console.log("Turning on AC, its now ON");
+		} else {
+			this.acState = false;
+			console.log("Turning off AC, its now OFF");
+		}
+	}
 }
 
 class TurnOn implements Command {
-    reciever: SignalReciever;
-    
-    constructor(reciever: SignalReciever) {
-        this.reciever = reciever;
-    }
+	reciever: SignalReciever;
 
-    execute(): void {
-        console.log("Turning on...");
-        this.reciever.toggle();
-    }
+	constructor(reciever: SignalReciever) {
+		this.reciever = reciever;
+	}
+
+	execute(): void {
+		console.log("Turning on...");
+		this.reciever.toggle();
+	}
 }
 class TurnOff implements Command {
-    reciever: SignalReciever;
-    
-    constructor(reciever: SignalReciever) {
-        this.reciever = reciever;
-    }
+	reciever: SignalReciever;
 
-    execute(): void {
-        console.log("Turning off...");
-        this.reciever.toggle();
-    }
+	constructor(reciever: SignalReciever) {
+		this.reciever = reciever;
+	}
+
+	execute(): void {
+		console.log("Turning off...");
+		this.reciever.toggle();
+	}
 }
 
 class MobileAppInvoker {
-    invoke(command: Command) {
-        command.execute();
-    }
+	invoke(command: Command) {
+		command.execute();
+	}
 }
 
 const light = new Light();

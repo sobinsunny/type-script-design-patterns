@@ -7,6 +7,11 @@
  *
  * This sounds like creational pattern but this is structural pattern because it defines how the objects structured
  * inside the concerete factory class
+ *
+ * same object properties will be customized so that we can avoid creating new objects.
+ *
+ * when a match is found old one will be customized, else new one will be used.
+ * it will reduce objects and helps in structuring the object.
  */
 class HotChoclate {
 	getHotChoclate(): void {
