@@ -1,7 +1,7 @@
 /**
  * visitor is the interface which can be supplied to the concrete class
  *
- * Monitor, Laptop is the vistor, which can be supplied to the ChristmasShoppingCart
+ * Monitor, Laptop are the vistor, which can be supplied to the ChristmasShoppingCart
  * which takes and provides additional functionality
  */
 
