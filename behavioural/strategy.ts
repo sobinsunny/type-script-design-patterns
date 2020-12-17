@@ -1,44 +1,44 @@
 /**
- * Strategy pattern, executes the logic on the basis of context set (strategy set)
- * 
- * e.g. here based addition or subtraction, the application is behaving in different way
+ * Strategy pattern, executes the logic on the basis of the recent strategy set (context set)
+ *
+ * e.g. here based addition or subtraction, the application is behaving based on different strategies
  */
 
 interface ICalcStrategy {
-    execute(valOne: number, valTwo: number): number
+	execute(valOne: number, valTwo: number): number;
 }
 
 interface ICalcContext {
-    setStrategy(strategy: ICalcStrategy): void
-    execute(valOne: number, valTwo: number): number
+	setStrategy(strategy: ICalcStrategy): void;
+	execute(valOne: number, valTwo: number): number;
 }
 
 class Add implements ICalcStrategy {
-    execute(valOne: number, valTwo: number): number {
-        return valOne + valTwo;
-    }
+	execute(valOne: number, valTwo: number): number {
+		return valOne + valTwo;
+	}
 }
 
 class Multiply implements ICalcStrategy {
-    execute(valOne: number, valTwo: number): number {
-        return valOne * valTwo;
-    }
+	execute(valOne: number, valTwo: number): number {
+		return valOne * valTwo;
+	}
 }
 
 class SimpleCalc implements ICalcContext {
-    strategy: ICalcStrategy;
+	strategy: ICalcStrategy;
 
-    setStrategy(strategy: ICalcStrategy): void {
-        this.strategy = strategy;
-    }
+	setStrategy(strategy: ICalcStrategy): void {
+		this.strategy = strategy;
+	}
 
-    execute(valOne: number, valTwo: number): number {
-        return this.strategy.execute(valOne, valTwo);
-    }
+	execute(valOne: number, valTwo: number): number {
+		return this.strategy.execute(valOne, valTwo);
+	}
 }
 
 const calculator = new SimpleCalc();
-const add= new Add();
+const add = new Add();
 const multiply = new Multiply();
 
 calculator.setStrategy(add);

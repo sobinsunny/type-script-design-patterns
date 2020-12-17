@@ -1,6 +1,8 @@
 /**
- * state pattern helps in different seperating different behaviour for different states, and have
- * the context behaviour seperated out from the state behaviours.
+ * State pattern introduces state and context.
+ *
+ * where the state saves its state to the context or update state to the context, so any number of
+ * states can be introduced to an single context.
  *
  * e.g. here the state has different behaviours and the context just stores the state information, the state
  * classes behaviour is seperated from the context behaviour, context has golabal state information

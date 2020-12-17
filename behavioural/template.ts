@@ -1,43 +1,44 @@
 /**
  * template pattern is all about just extending the behaviour of the callses.
+ *
+ * where the abstract class or class defines the templates, and the sub classed will extend them.
  */
 class Parser {
-    str: string
+	str: string;
 
-    read(str: string):  void {
-        this.str = str;
-    }
+	read(str: string): void {
+		this.str = str;
+	}
 
-    parse(): string {
-        return this.str;
-    }
+	parse(): string {
+		return this.str;
+	}
 
-    print(): string {
-        return this.str;
-    }
+	print(): string {
+		return this.str;
+	}
 }
 
 class IntegerParser extends Parser {
-    constructor() {
-        super();
-    }
+	constructor() {
+		super();
+	}
 
-    parse(): string {
-        this.str = this.str.replace(/\d/, "");
-        return this.str;
-    }
+	parse(): string {
+		this.str = this.str.replace(/\d/, "");
+		return this.str;
+	}
 }
 
 class EmptyParser extends Parser {
-    constructor() {
-        super();
-    }
+	constructor() {
+		super();
+	}
 
-    parse(): string {
-        this.str = this.str.replace(/\s/, " _ ");
-        return this.str;
-    }
-
+	parse(): string {
+		this.str = this.str.replace(/\s/, " _ ");
+		return this.str;
+	}
 }
 
 const intParser = new IntegerParser();
