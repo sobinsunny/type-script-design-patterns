@@ -1,5 +1,6 @@
 /**
  * Director to build, director build the original product.
+ * Director executes list of steps.
  */
 
 interface IComputer {
