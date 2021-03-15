@@ -56,5 +56,10 @@ class Director implements IComputerBuilder {
 
 const director = new Director();
 
-console.log(director.buildPC());
-console.log(director.buildServer());
+// we can set a builder and build the application
+// the director will just make calls to functions
+
+const pc = director.buildPC();
+const server = director.buildServer();
+
+console.log(pc, server);

@@ -10,31 +10,31 @@
  * Note: The subsystems can be implemented from common interface, to make the classes more discipline
  */
 
-class Coffee {
+class Milk {
 	constructor() {
-		console.log("Making Coffee....");
+		console.log("Making Milk....");
 	}
 }
 
-class Beer {
+class Sugar {
 	constructor() {
-		console.log("Brewing Beer....");
+		console.log("Adding Sugar...");
+	}
+}
+
+class Coffee {
+	constructor() {
+		console.log("Adding Coffee Powder...");
 	}
 }
 
 class DrinkFacade {
-	constructor(drink: String) {
-		if (drink == "Coffee") {
-			return new Coffee();
-		} else if (drink == "Beer") {
-			return new Beer();
-		} else {
-			// throw new Error('Unknown drink...')
-		}
+	constructor() {}
+
+	makeDrink() {
+		new Milk(); // sub-system
+		new Coffee(); // sub-system
+		new Sugar(); // sub-system
 	}
 }
-
-const coffee = new DrinkFacade("Coffee");
-const beer = new DrinkFacade("Beer");
-
-const unknown = new DrinkFacade("tea");
+new DrinkFacade().makeDrink();
