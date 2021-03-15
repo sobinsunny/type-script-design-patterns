@@ -11,7 +11,7 @@ interface Drink {
 	makeDrink(requestedDrink: MyDrink): void;
 }
 
-class Coffee implements Drink {
+class Coca implements Drink {
 	nextDrink: Drink;
 
 	makeDrink(requestedDrink: MyDrink): void {
@@ -74,11 +74,11 @@ class MyDrink {
 
 const myDrink = new MyDrink("beer");
 
-const coffee = new Coffee();
+const coca = new Coca();
 const tea = new Tea();
 const beer = new Beer();
 
-coffee.registerNextDrinkHandler(tea);
+coca.registerNextDrinkHandler(tea);
 tea.registerNextDrinkHandler(beer);
 
-coffee.makeDrink(myDrink);
+coca.makeDrink(myDrink);
